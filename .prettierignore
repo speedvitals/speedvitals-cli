@@ -1,0 +1,9 @@
+dist/
+coverage/
+*.log
+.DS_Store
+.env*
+!.env.example
+.vscode/
+.idea/
+*.tsbuildinfo
