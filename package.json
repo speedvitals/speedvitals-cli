@@ -1,9 +1,17 @@
 {
   "name": "speedvitals",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Speedvitals CLI",
   "license": "MIT",
-  "author": "Speedvitals",
+  "author": "speedvitals",
+  "homepage": "https://github.com/speedvitals/speedvitals-cli#-speedvitals-cli",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/speedvitals/speedvitals-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/speedvitals/speedvitals-cli/issues"
+  },
   "type": "module",
   "main": "dist/index.js",
   "bin": {
