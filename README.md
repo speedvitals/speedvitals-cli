@@ -132,7 +132,6 @@ Analyze website performance using Lighthouse.
 | `--api-key <key>`                | String     | API key for authentication                                                     |
 | `--baseBranch <branch>`          | String     | Base branch name for CI/CD                                                     |
 | `--fail-on-regression <boolean>` | Boolean    | Exit with error code on budget regression: `true` or `false` (default: `true`) |
-| `--log-results`                  | Boolean    | Log detailed results to the console (default: `false`)                         |
 
 #### Performance Budget Options
 
