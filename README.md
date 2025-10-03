@@ -137,23 +137,15 @@ Analyze website performance using Lighthouse.
 
 > **Note:** If any custom budget value is set, all other default budget values will be ignored.
 
-| Option                          | Type   | Description                          | Default |
-| ------------------------------- | ------ | ------------------------------------ | ------- |
-| `--lcp <ms>`                    | Number | Largest Contentful Paint budget (ms) | 515     |
-| `--cls <score>`                 | Number | Cumulative Layout Shift budget       | 0.0     |
-| `--fcp <ms>`                    | Number | First Contentful Paint budget (ms)   | 1800    |
-| `--tbt <ms>`                    | Number | Total Blocking Time budget (ms)      | 200     |
-| `--server-response-time <ms>`   | Number | Server response time budget (ms)     | 600     |
-| `--speed-index <ms>`            | Number | Speed Index budget (ms)              | 2300    |
-| `--performance-score <score>`   | Number | Performance score (0-100)            | 90      |
-| ------------------------------- | ------ | ------------------------------------ | ------- |
-| `--lcp <ms>`                    | Number | Largest Contentful Paint budget (ms) | 515     |
-| `--cls <score>`                 | Number | Cumulative Layout Shift budget       | 0.0     |
-| `--fcp <ms>`                    | Number | First Contentful Paint budget (ms)   | 1800    |
-| `--tbt <ms>`                    | Number | Total Blocking Time budget (ms)      | 200     |
-| `--server-response-time <ms>`   | Number | Server response time budget (ms)     | 600     |
-| `--speed-index <ms>`            | Number | Speed Index budget (ms)              | 2300    |
-| `--performance-score <score>`   | Number | Performance score (0-100)            | 90      |
+| Option                        | Type   | Description                          | Default |
+| ----------------------------- | ------ | ------------------------------------ | ------- |
+| `--lcp <ms>`                  | Number | Largest Contentful Paint budget (ms) | 2500    |
+| `--cls <score>`               | Number | Cumulative Layout Shift budget       | 0.1     |
+| `--fcp <ms>`                  | Number | First Contentful Paint budget (ms)   | 1800    |
+| `--tbt <ms>`                  | Number | Total Blocking Time budget (ms)      | 200     |
+| `--server-response-time <ms>` | Number | Server response time budget (ms)     | 800     |
+| `--speed-index <ms>`          | Number | Speed Index budget (ms)              | 3400    |
+| `--performance-score <score>` | Number | Performance score (0-100)            | 90      |
 
 ### `help` Command
 
