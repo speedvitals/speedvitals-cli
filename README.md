@@ -1,13 +1,13 @@
 # 🚀 Speedvitals CLI
 
-A powerful command-line tool for analyzing website performance using Lighthouse metrics. Monitor Core Web Vitals, set performance budgets, and integrate performance testing into your CI/CD pipeline.
+A command-line tool for analyzing website performance using Lighthouse metrics. Monitor Core Web Vitals, set performance budgets, and integrate performance testing into your CI/CD pipeline.
 
 [![npm version](https://img.shields.io/npm/v/speedvitals.svg)](https://www.npmjs.com/package/speedvitals)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 ## ✨ Features
 
-- **Comprehensive Performance Analysis** - Analyze websites using Lighthouse metrics including LCP, FCP, CLS, TBT, and more
+- **Performance Analysis** - Analyze websites using Lighthouse metrics including LCP, FCP, CLS, TBT, and more
 - **Performance Budgets** - Set custom budgets for all Core Web Vitals and get alerts on regressions
 - **Multiple Test Locations** - Test from 15+ global locations.
 - **Device Emulation** - Test across various devices (mobile, desktop, tablets, specific phone models)
@@ -155,7 +155,7 @@ Display help information:
 speedvitals help [command]
 ```
 
-## 🌍 Supported Locations
+## Supported Locations
 
 | Location Code | Region                  |
 | ------------- | ----------------------- |
@@ -175,7 +175,7 @@ speedvitals help [command]
 | `kr`          | South Korea             |
 | `tw`          | Taiwan                  |
 
-## 📱 Supported Devices
+## Supported Devices
 
 ### Generic Devices
 
@@ -204,23 +204,35 @@ speedvitals help [command]
 - `redmi5A` - Xiaomi Redmi 5A
 - `motoG5` - Motorola Moto G5
 
-### CI/CD Integration
+# 🔄 CI/CD Integration
 
-The CLI automatically detects CI environments and includes build metadata:
+The CLI automatically detects CI environments and includes build metadata in your performance reports. `--fail-on-regression` flag is defaulted to `true` in CI environments to ensure your pipeline fails on budget regressions.
 
 ```bash
 speedvitals analyze \
   --urls '["https://staging.example.com"]' \
   --baseBranch main \
-  --fail-on-regression true
 ```
 
-## 🔄 CI/CD Examples
+## CI/CD Examples
 
 ### GitHub Actions
 
+This workflow triggers on every push to `main` or `develop` branches, and on all pull requests targeting these branches.
+
+**Setting up secrets:**
+
+1. Go to your GitHub repository
+2. Click **Settings** → **Secrets and variables** → **Actions**
+3. Click **New repository secret**
+4. Name: `SPEEDVITALS_API_KEY`
+5. Value: Your API key from [Speedvitals Account Settings](https://speedvitals.com/account/api)
+6. Click **Add secret**
+
+**Workflow file:** `.github/workflows/performance.yml`
+
 ```yaml
-name: Performance Testing
+name: Speedvitals Performance Testing
 
 on:
   push:
@@ -233,30 +245,129 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
+
       - name: Run Performance Analysis
         env:
           SPEEDVITALS_API_KEY: ${{ secrets.SPEEDVITALS_API_KEY }}
-        run: npx speedvitals analyze --urls '["https://staging.example.com"]' --device mobile --location us --baseBranch main --lcp 2500 --cls 0.1 --fcp 1800 --tbt 200 --performance-score 90
+        run: |
+          npx speedvitals analyze \
+            --urls '["https://staging.example.com"]' \
+            --device mobile \
+            --location us \
+            --baseBranch main \
+            --lcp 2500 \
+            --cls 0.1 \
+            --fcp 1800 \
+            --tbt 200 \
+            --performance-score 90
 ```
 
 ### GitLab CI
 
+This job runs on every push to any branch as part of the `test` stage.
+
+**Setting up secrets:**
+
+1. Go to your GitLab project
+2. Click **Settings** → **CI/CD**
+3. Expand **Variables**
+4. Click **Add variable**
+5. Key: `SPEEDVITALS_API_KEY`
+6. Value: Your API key from [Speedvitals Account Settings](https://speedvitals.com/account/api)
+7. Uncheck **Protect variable** (unless you only want it on protected branches)
+8. Check **Mask variable** to hide it in logs
+9. Click **Add variable**
+
+**Workflow file:** `.gitlab-ci.yml`
+
 ```yaml
 performance-test:
   stage: test
-  image: node:18
+  image: node:20
   script:
     - npm install -g speedvitals
-    - speedvitals analyze --urls '["https://staging.example.com"]' --fail-on-regression true
+    - |
+      speedvitals analyze \
+        --urls '["https://staging.example.com"]' \
+        --device mobile \
+        --location us \
+        --baseBranch main \
   variables:
     SPEEDVITALS_API_KEY: $SPEEDVITALS_API_KEY
+  only:
+    - merge_requests
+    - main
+    - develop
+```
+
+### Jenkins
+
+This pipeline runs on every push to `main` or `develop` branches.
+
+**Setting up secrets:**
+
+1. Go to Jenkins dashboard
+2. Click **Manage Jenkins** → **Credentials**
+3. Select the appropriate domain/store
+4. Click **Add Credentials**
+5. Kind: **Secret text**
+6. Secret: Your API key from [Speedvitals Account Settings](https://speedvitals.com/account/api)
+7. ID: `speedvitals-api-key`
+8. Description: `Speedvitals API Key`
+9. Click **OK**
+
+**Workflow file:** `Jenkinsfile`
+
+```groovy
+pipeline {
+    agent any
+
+    environment {
+        SPEEDVITALS_API_KEY = credentials('speedvitals-api-key')
+    }
+
+    stages {
+        stage('Speedvitals Performance Test') {
+            when {
+                branch pattern: "main|develop", comparator: "REGEXP"
+            }
+            steps {
+                script {
+                    sh '''
+                        npm install -g speedvitals
+                        speedvitals analyze \
+                          --urls '["https://staging.example.com"]' \
+                          --device mobile \
+                          --location us \
+                          --baseBranch main
+                    '''
+                }
+            }
+        }
+    }
+}
 ```
 
 ### CircleCI
+
+This workflow runs on every commit to any branch.
+
+**Setting up secrets:**
+
+1. Go to your CircleCI project
+2. Click **Project Settings**
+3. Click **Environment Variables**
+4. Click **Add Environment Variable**
+5. Name: `SPEEDVITALS_API_KEY`
+6. Value: Your API key from [Speedvitals Account Settings](https://speedvitals.com/account/api)
+7. Click **Add Environment Variable**
+
+**Workflow file:** `.circleci/config.yml`
 
 ```yaml
 version: 2.1
@@ -264,22 +375,87 @@ version: 2.1
 jobs:
   performance:
     docker:
-      - image: node:18
+      - image: node:20
     steps:
       - checkout
-      - run:
-          name: Install CLI
-          command: npm install -g speedvitals
-      - run:
-          name: Performance Tests
-          command: speedvitals analyze --urls '["https://staging.example.com"]' --fail-on-regression true
-          environment:
-            SPEEDVITALS_API_KEY: $SPEEDVITALS_API_KEY
 
+      - run:
+          name: Install Speedvitals CLI
+          command: npm install -g speedvitals
+
+      - run:
+          name: Run Performance Analysis
+          command: |
+            speedvitals analyze \
+              --urls '["https://staging.example.com"]' \
+              --device mobile \
+              --location us \
+              --baseBranch main
 workflows:
+  version: 2
   test:
     jobs:
-      - performance
+      - performance:
+          filters:
+            branches:
+              only:
+                - main
+                - develop
+```
+
+### Azure Pipelines
+
+This pipeline runs on every push to `main` or `develop` branches, and on pull requests targeting these branches.
+
+**Setting up secrets:**
+
+1. Go to your Azure DevOps project
+2. Click **Pipelines** → **Library**
+3. Click **+ Variable group**
+4. Name: `speedvitals-variables`
+5. Click **+ Add** under Variables
+6. Name: `SPEEDVITALS_API_KEY`
+7. Value: Your API key from [Speedvitals Account Settings](https://speedvitals.com/account/api)
+8. Click the lock icon to make it secret
+9. Click **Save**
+
+**Workflow file:** `azure-pipelines.yml`
+
+```yaml
+trigger:
+  branches:
+    include:
+      - main
+      - develop
+
+pr:
+  branches:
+    include:
+      - main
+      - develop
+
+pool:
+  vmImage: "ubuntu-latest"
+
+variables:
+  - group: speedvitals-variables
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "20.x"
+    displayName: "Install Node.js"
+
+  - script: |
+      npm install -g speedvitals
+      speedvitals analyze \
+        --urls '["https://staging.example.com"]' \
+        --device mobile \
+        --location us \
+        --baseBranch main
+    displayName: "Run Performance Analysis"
+    env:
+      SPEEDVITALS_API_KEY: $(SPEEDVITALS_API_KEY)
 ```
 
 ## 📊 Output Example
