@@ -5,6 +5,24 @@ A command-line tool for analyzing website performance using Lighthouse metrics. 
 [![npm version](https://img.shields.io/npm/v/speedvitals.svg)](https://www.npmjs.com/package/speedvitals)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
+## 📑 Table of Contents
+
+- [✨ Features](#-features)
+- [📦 Installation](#-installation)
+- [🔑 Getting Started](#-getting-started)
+- [📖 Usage](#-usage)
+- [💻 Command Reference](#-command-reference)
+- [🌍 Supported Locations](#supported-locations)
+- [📱 Supported Devices](#supported-devices)
+- [🔄 CI/CD Integration](#-cicd-integration)
+  - [GitHub Actions](#github-actions)
+  - [GitLab CI](#gitlab-ci)
+  - [Jenkins](#jenkins)
+  - [CircleCI](#circleci)
+  - [Azure Pipelines](#azure-pipelines)
+- [📊 Output Example](#-output-example)
+- [🔗 Links](#-links)
+
 ## ✨ Features
 
 - **Performance Analysis** - Analyze websites using Lighthouse metrics including LCP, FCP, CLS, TBT, and more
